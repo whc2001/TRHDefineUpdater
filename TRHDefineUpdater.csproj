@@ -46,6 +46,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="FileDownloader.cs" />
+    <Compile Include="FileReadWrite.cs" />
     <Compile Include="frmMain.cs">
       <SubType>Form</SubType>
     </Compile>

@@ -74,6 +74,45 @@ namespace TRHDefineUpdater
             }
             return swordTable;
         }
+
+        private string OpenDialog()
+        {
+            if (folderBrowserDialog1.ShowDialog() == DialogResult.OK)
+                return folderBrowserDialog1.SelectedPath;
+            else
+                return "";
+        }
+        private string OpenFile()
+        {
+            if (!File.Exists(Environment.CurrentDirectory + @"\nosave.txt"))
+            {
+                string savedPath = FileReadWrite.Read(Environment.CurrentDirectory + @"\path.txt");
+                if (savedPath == "")
+                {
+                    Print("未找到已保存的路径，请选择TRH的位置...\r\n");
+                    if (OpenDialog() != "")
+                    {
+                        FileReadWrite.Write(folderBrowserDialog1.SelectedPath, Environment.CurrentDirectory + @"\path.txt");
+                        return folderBrowserDialog1.SelectedPath;
+                    }
+                    else
+                    {
+                        return "";
+                    }
+                }
+                else
+                {
+                    Print("找到已保存的路径:" + savedPath);
+                    return savedPath;
+                }
+            }
+            else
+            {
+                Print("保存路径功能被禁用，如需启用请删除本程序根目录下「nosave.txt」\r\n");
+                Print("请选择TRH的位置...\r\n");
+                return OpenDialog();
+            }
+        }
         public frmMain()
         {
             InitializeComponent();
@@ -83,14 +122,18 @@ namespace TRHDefineUpdater
         private void frmMain_Load(object sender, EventArgs e)
         {
             this.Show();
-            /*if (!File.Exists(Environment.CurrentDirectory + @"\DecryptCore.swf"))
-                Failed("找不到解密工具DecryptCore.swf");
-            else
-                axShockwaveFlash1.Movie = Environment.CurrentDirectory + @"\DecryptCore.swf";*/
-            Print("请选择TRH的位置...\r\n");
-            if (folderBrowserDialog1.ShowDialog() == DialogResult.OK)
+            string retn = ""; 
+            try
             {
-                filePath = folderBrowserDialog1.SelectedPath;
+                retn = OpenFile();
+            }
+            catch
+            {
+                Failed("已保存的路径读写操作失败，请删除本程序根目录下「path.txt」后重新运行并选择新的目录。");
+            }
+            if (retn != "")
+            {
+                filePath = retn;
                 definePath = @"\devtools\panel\app";
                 defineFullPath = filePath + definePath;
                 defineFilePath = defineFullPath + @"\define.js";
@@ -120,12 +163,12 @@ namespace TRHDefineUpdater
                 }
                 else
                 {
-                    Failed("未找到define.js...\r\n请确认文件是否存在:" + defineFilePath + "\r\n");
+                    Failed("未找到define.js...\r\n请确认文件是否存在:" + defineFilePath + "\r\n若保存的文件夹已更改位置，请删除本程序根目录下「path.txt」后重新运行并选择新的目录。");
                 }
             }
             else
             {
-                Failed("用户取消\r\n");
+                Failed("路径为空或用户取消\r\n");
             }
 
         }

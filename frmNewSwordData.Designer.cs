@@ -138,14 +138,14 @@
             0,
             0});
             this.numSwordID.Name = "numSwordID";
-            this.numSwordID.Size = new System.Drawing.Size(70, 21);
+            this.numSwordID.Size = new System.Drawing.Size(150, 21);
             this.numSwordID.TabIndex = 8;
             // 
             // txtName
             // 
             this.txtName.Location = new System.Drawing.Point(65, 51);
             this.txtName.Name = "txtName";
-            this.txtName.Size = new System.Drawing.Size(70, 21);
+            this.txtName.Size = new System.Drawing.Size(151, 21);
             this.txtName.TabIndex = 9;
             // 
             // trkRarity
@@ -183,7 +183,7 @@
             "短刀"});
             this.cmbType.Location = new System.Drawing.Point(65, 132);
             this.cmbType.Name = "cmbType";
-            this.cmbType.Size = new System.Drawing.Size(89, 20);
+            this.cmbType.Size = new System.Drawing.Size(150, 20);
             this.cmbType.TabIndex = 12;
             // 
             // cmbGenre
@@ -205,7 +205,7 @@
             "青江"});
             this.cmbGenre.Location = new System.Drawing.Point(65, 174);
             this.cmbGenre.Name = "cmbGenre";
-            this.cmbGenre.Size = new System.Drawing.Size(89, 20);
+            this.cmbGenre.Size = new System.Drawing.Size(150, 20);
             this.cmbGenre.TabIndex = 13;
             // 
             // trkArea

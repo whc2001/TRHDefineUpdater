@@ -177,14 +177,24 @@ namespace TRHDefineUpdater
         public frmNewSwordData(string[] swordData)
         {
             InitializeComponent();
+            bool isEv;
+            try
+            {
+                isEv = (swordData[37] == "11");
+            }
+            catch
+            {
+                isEv = false;
+            }
+            
             numSwordID.Value = int.Parse(swordData[0]);
-            txtName.Text = swordData[2];
+            txtName.Text = swordData[2] + (isEv ? "·極" : "");
             trkRarity.Value = int.Parse(swordData[8]);
             cmbType.SelectedIndex = SwordTypeOfficalDefineToTRHDefine(int.Parse(swordData[6])) - 1;
             cmbGenre.SelectedIndex = SwordGenreOfficalDefineToTRHDefine(int.Parse(swordData[5])) - 1;
             trkArea.Value = SwordAreaConv(int.Parse(swordData[6]));
             trkEquip.Value = int.Parse(swordData[32]);
-            trkEvolution.Value = GuessSwordEvolutionLevel(int.Parse(swordData[6]));
+            trkEvolution.Value = isEv ? 1 : GuessSwordEvolutionLevel(int.Parse(swordData[6]));
         }
 
         private void btnFinish_Click(object sender, EventArgs e)
