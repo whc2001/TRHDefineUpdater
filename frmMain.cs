@@ -102,7 +102,7 @@ namespace TRHDefineUpdater
                 }
                 else
                 {
-                    Print("找到已保存的路径:" + savedPath);
+                    Print("找到已保存的路径，尝试打开...\r\n");
                     return savedPath;
                 }
             }
@@ -163,7 +163,7 @@ namespace TRHDefineUpdater
                 }
                 else
                 {
-                    Failed("未找到define.js...\r\n请确认文件是否存在:" + defineFilePath + "\r\n若保存的文件夹已更改位置，请删除本程序根目录下「path.txt」后重新运行并选择新的目录。");
+                    Failed("未找到define.js...\r\n请确认文件是否存在:\r\n\r\n" + defineFilePath +  "\r\n\r\n若保存的文件夹已更改位置，请删除本程序根目录下「path.txt」后重新运行并选择新的目录。\r\n");
                 }
             }
             else

@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
+using System.Drawing.Imaging;
 
 namespace TRHDefineUpdater
 {
@@ -10,11 +13,12 @@ namespace TRHDefineUpdater
         public delegate void AllDownloadFinishedHandler();
         public static event AllDownloadFinishedHandler AllDownloadFinished;
 
+        private static int _swordId;
         private static List<int> swordTable;
         private static string baseDir;
         private static int errCount;
 
-        private static void Next()
+        private static void Next()                              //Download next sword crest.
         {
             swordTable.RemoveAt(0);
             if (swordTable.Count != 0)
@@ -22,7 +26,7 @@ namespace TRHDefineUpdater
             else
                 AllDownloadFinished.Invoke();
         }
-        private static void Failed(string exMsg)
+        private static void Failed(string exMsg)                //Something gone wrong.
         {
             if (errCount < 3)
             {
@@ -61,6 +65,7 @@ namespace TRHDefineUpdater
 
         private static void Download(int swordId)
         {
+            _swordId = swordId;                                                 //buffer
             frmMain.Print("正在下载刀纹#" + swordId.ToString() + "...\r\n");
             string fileName = "swr_crest_s_" + string.Format("{0:000000}", swordId) + "u0xq7npke";
             string fileNameMD5 = MD5(fileName);
@@ -69,7 +74,7 @@ namespace TRHDefineUpdater
             fd.FileDownloadFinished += Fd_FileDownloadFinished;
             fd.FileDownloading += new FileDownloader.FileDownloadingHandler((received, total) => frmMain.Print(string.Format("Downloading:{0}/{1}\r\n", received, total)));
             fd.FileDownloadError += Fd_FileDownloadError;
-            fd.DownloadFile(baseDir + "\\" + swordId + ".png");
+            fd.Download();
         }
 
         private static void Fd_FileDownloadError(Exception ex)
@@ -79,8 +84,23 @@ namespace TRHDefineUpdater
 
         private static void Fd_FileDownloadFinished(byte[] data)
         {
-            frmMain.Print("成功\r\n");
-            Next();
+            frmMain.Print("下载完成，正在调整尺寸并保存...");
+            try
+            {
+                MemoryStream ms = new MemoryStream(data);
+                Image img = Image.FromStream(ms);
+                Bitmap bmp = new Bitmap(img, new Size(100, 100));
+                bmp.Save(baseDir + "\\" + _swordId + ".png", ImageFormat.Png);
+                bmp.Dispose();
+                img.Dispose();
+                ms.Dispose();
+                frmMain.Print("成功\r\n");
+                Next();
+            }
+            catch(Exception ex)
+            {
+                Failed(ex.Message);
+            }
         }
     }
 }
